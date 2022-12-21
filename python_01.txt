@@ -1,0 +1,58 @@
+시험에 자주 등장하는 포인트
+
+1. 파이썬 패키지 불러오기. -> pip install 패키지명
+2. csv파일 불러오기.     -> read_csv()함수를 활용 
+3. 결측치를 채우기       -> fillna(method='bfill','ffill')
+                        평균치로 채우기(mean),최소값(min),최빈값(mode)
+                        ex2_sklearn_PreProcess_new.ipynb파일 참조
+4. 결측치 행 삭제          dropna()함수를 사용                  
+5. 특정 행이나 컬럼 삭제  -> drop()함수를 사용, 행 axis=0, 컬럼 axis=1                        
+6. 이상치 제거          -> 조건필터를 사용하여 이상치를 제거한다. 
+7. 데이터 타입 변경.     -> astype()함수를 사용하여 데이터 타입을 변경   
+                        replace()함수나 레이블 인코더를 통해 문자열->숫자형으로 변환                   
+8. seaborn           -> scatterplot(x,y, palette) : 산점도를 그릴때 사용
+                        countplot : 숫자를 세고, 숫자로 bar 그래프를 그려준다.
+                        histplot : 데이터의 분포를 확인하는 그래프를 그려준다.
+                        kdeplot : 히스토그램을 곡선으로 그려보자
+                        heatmap : 컬럼데이터간의 상관계수를 시각화하는 그래프를 그려준다.
+                        boxplot : 평균과 분산값의 특성 이해하는데 도움, 이상치
+9. matplotlib        -> pandas패키지에서 matplotlib패키지를 활용해서 그래프를 그려준다.
+                        예) df['Survived'].value_counts().plot.pie()
+                        예) df['gender'].value_counts().plot(kind='bar')
+                        
+10. 더미변수타입으로 변환. -> get_dummies()함수를 활용 -> one hot encoding타입
+                        
+11. Pandas 데이터프레임 합치기 : concat : 데이터프레임에 마지막 행이나 마지막 컬럼에 
+                           다른 데이터프레임을 붙일때 주로 사용
+                           merge : 특정한 컬럼값을 기준으로 데이터프레임을 합칠때
+                           참고 페이지 : https://yganalyst.github.io/data_handling/Pd_12/
+
+12. 데이터 scaler       -> MinMaxScaler(0~1사이의 값으로 scale값을 변경), Normalize
+                        StandardScaler(평균이 0, 분산 1)
+13. 데이터셋 분할         -> train_test_split(x,y,test_size=0.2, random_state=42)  
+                          데이터셋의 레이블의 갯수를 일정하게 train과 test로 나눠줄때는
+                          stratify옵션을 넣어준다. stratify='레이블컬럼'    
+14. 정규화/표준화         -> MinmaxScaler()함수 사용, standardscaler()함수 사용
+15. 머신러닝 모델링        -> 1. 회귀(mse loss, mae loss, rmse loss)  
+                             LinearRegression(다중 선형 회귀: y=w1*x1+w2*x2.. wn*xn+b)
+                          2. 분류(accuracy,recall/precision/F1)의 score함수를 활용
+                             LogisticRegression, DecisionTreeClassifier
+                             KNeighborsClassifier, SGDClassifier, RandomForestClassifier
+                             XGBClassifier(별도로 pip install로 패키지 설치해서 사용)
+                             LGBMClassifier...
+                             위에 모델을 한번씩 코딩해서 사용해 보시는 것을 권장
+                          
+16. 딥러닝 모델링          -> keras의 sequential()함수로 모델링하는 것만 이해하면 된다.
+                           모델 레이어를 추가할때는 model.add(Dense())
+                           1. 모델을 생성하고(앞에 2줄 참고) 
+                           2. compile(학습조건설정: optimizer, loss, metrics)    
+                           3. fit(x,y, batch_size, epochs, validation_data=(), callbacks=[콜백리스트])
+                           
+                           * 분류 모델인 경우 이진 분류 모델, 다중 분류 모델
+                           
+                           콜백함수 설정 : EarlyStopping, ModelCheckpoint
+                              
+                        
+                        
+                        
+
