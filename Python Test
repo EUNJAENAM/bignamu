@@ -1,167 +1,4 @@
-if condition:
-    print("change>3000")
-else:
-    print("change<=3000")
-----------------------------------------------------------------------------------------
-DEBUG = False
-
-a=10
-b=15
-
-if DEBUG:
-    print("a={}, b={}".format(a,b))
-------------------------------------------------------------------------------------------
-# 리스트와 리스트 더하기
-myList1 = [1,2,3]
-myList2 = [4,5,6]
-myList1.extend(myList2)
-------------------------------------------------------------------------------------------
-#엑셀파일 로드 Version Up
-!pip install xlrd==1.2.0
-
-# 한글지원
-!sudo apt-get install -y fonts-nanum
-!sudo fc-cache -fv
-!rm ~/.cache/matplotlib –rf
-------------------------------------------------------------------------------------------
-# tuple은 초기화 할 때, 처음 값을 넣을 때 확실히!!
-# tuple은 append가 안 된다. 왜? 읽기 전용
-mytuple = (1, 2, 3, 4, 5)      #튜플 타입
-mytuple.append(1)
-------------------------------------------------------------------------------------------
-# count메서드를 tuple데이터에 적용
-testTuple = (10,20,10,30,20)
-testTuple.count(10)
-------------------------------------------------------------------------------------------
-# 집합형/ 중복데이터 안들어감
-myset = set()
-# set(집합)에서는 요소 추가를 add()
-myset.add(1)
-myset.add(2)
-myset.add(3)
-
-또다른 방법
-s1 = set([1,2,3])
-s1.add(4)            #추가
-s1.update([5,6,7])    #업데이트 추가
-s1.remove(3)        #삭제
------------------------------------------------------------------------------------------
-mydict = dict()
-mydict['apple'] = 123456
-# dict에 index형태로 저장시 index값이 key, data값이 value
-mydict[0] = 2
-mydict[0]
------------------------------------------------------------------------------
-# 함수
-def test2(a,b,c):
-    print("{}+{}={}".format(a,b,c))
-
-test2(1,2,3)
-
-----------------------------------------------------------
-def calc(a, b, c):
-    return (a + b) * c
------------------------------------------------------------
-#lambda
-add = lambda a, b: a+b
-
-
-
-분기, 프로그램 성능 저하
-바로 실행, 분기없음, 성능저하 양호
-코드양이 적을 때 활용
-
-#조건
-# 아래에 실습코드를 작성하고 결과를 확인합니다.
-jogun = df_total[df_total['PerHour'] > 130].index
-df_total.drop(jogun, inplace=True)
-df_total
-
-#반복문
-mylist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-for abc in mylist:
-    print(abc)
-
-# %연산자 
-for i in mylist:
-    # 나머지가 0이되면, print()함수를 실행
-    if i % 2 == 0:
-        print(i)
-    ##################
-
-# continue를 실행하면 실행순서를 아래로 내려가지 않고 for문으로 올라가버린다.
-for i in mylist:
-    # your code here #
-    if i % 2 == 1:
-        continue
-    print(i)
-
-for i in mylist:
-    if i >= 6:
-        print('break')
-        break          #빠져나오기
-    print(i)      
-------------------------------------------------------------------------------
-#mylist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-mylist = []
-
-for i in range(1,11):
-    mylist.append(i)
-print(mylist)
-for i in mylist:                     # 짝수이면 if는 참이다.
-    if i % 2 == 0:
-        print(i)
-------------------------------------------------------------------------
-mylist = [i for i in range(1,11) if i%2==0]      #1~10사이의 숫자중 짝수만
-mylist
-even = [i for i in mylist if i % 2 == 0]
-even = [i+2 for i in mylist]                    #모든값에 +2
-
--Text 쪼개기------------------------------------------------------------------
-a = 'This is a pen’
-# a 문자열을 공백(' ')을 기준으로 나눈다.
-# 문자열을 나눌때는 split()메서드를 자주 사용한다.
-temp = a.split(' ')
-print(temp)
-type(temp)
-
-------------------------------------------------------------------------
-a = '01-sample.png’
-a.replace(‘.png’,‘.jpg’)
-
-a.strip()     #공백제거
-!pip install xlrd==1.2.0              #엑셀 버전업
-# 코랩에서 한글 사용시
-!sudo apt-get install -y fonts-nanum
-!sudo fc-cache -fv
-!rm ~/.cache/matplotlib –rf
-
-# 경로 확인
-%cd {basePath}
-!pwd
-
-#구글드라이브 마운틴
-from google.colab import drive
-drive.mount('/content/drive')
-mydict['apple'] = 'byebye'     #값 바꾸기
-------------------------------------------------------------------------------------
-#시험중 작업중인 디렉토리 파일 확인
-import os
-os.listdir('.')
-
-#csv load
-import pandas as pd
-
-csvPath = '/content/drive/MyDrive/Colab Notebooks/자격증/서울시CCTV구별_211231기준.csv'
-xlsPath = '/content/drive/MyDrive/Colab Notebooks/자격증/주민등록인구_2021.xls’
-
-df = pd.read_csv(csvPath, header=1, encoding='CP949')        #encoding=’‘utf-8’
-#‘UTF-8’로 해서 표현 안되면 ‘CP949’로 설정
-df = pd.read_csv(csvPath, header=1, encoding='CP949', thousands=',')    # 콤마제거 후 로드
-
-df.columns                         #컬럼명 확인
-df.columns = ['구별', '총계']         #컬럼명 새로 지정(변경)
+df.columns = ['구별', '총계']                         #컬럼명 새로 지정(변경)
 df.rename(columns = {'총계':'소계'},inplace=True)     #rename 사용시
 
 df.drop([0,1], inplace=True)     #불필요 column 삭제 index번호임 (0부터 시작)
@@ -183,19 +20,19 @@ df.reset_index(drop=True, inplace=True)     #index reset
 df.isnull().sum()    #결측치 개수 확인
 df.fillna(0,inplace=True)     #결측치 값 특정값으로 채우기
 df.fillna(method=’ffill’)      #‘backfill’, ‘bfill’, ‘pad’, ‘ffill’, None
-df.info()    #정보보기
+
 #컬럼 형변환 (2번 컬럼부터( 0부터 시작))
 for i in df.columns[2:]:
   df[i] = df[i].astype(int)
 
-df['총계'] = df['총계'].str.replace(',','').astype(int)      #콤마 들어간 숫자 변환
+df['총계'] = df['총계'].str.replace(',','').astype(int)   # 콤마 들어간 숫자 변환
 
-df.sort_values(by='소계', ascending=True, inplace=True)        #소계별로 정렬
+df.sort_values(by='소계', ascending=True, inplace=True)   # 소계별로 정렬
 
 df['최근증가율'] = (df['2016년'] + df['2015년'] + df['2014년']) / \
               df['2013년도 이전'] *100
 
-df
+-------------------------------------------------------------------------
 DataFrame에서 부분정보 가져올때는 [열][행]
 loc 는 [행,열]
 iloc 는 [행,열] 인데 숫자로만
@@ -209,6 +46,7 @@ id(CCTV_Seoul)     #메모리 번지 참조
 CCTV_Seoul['구별'].isin(['중랑구','종로구'])
 CCTV_Seoul['구별'].unique()     #유니크
 
+---- concat-----------------------------------------------------------
 result = pd.concat([df1, df2, df3])     #데이터 연결 (레코드수 증가)
 result = pd.concat([df1, df2, df3], keys=['x', 'y', 'z'])   #index 추가
 result = pd.concat([df1, df4], axis=1)     #join=outter (기본값), 합집합
@@ -397,10 +235,6 @@ bmi = X[:,np.newaxis, 2]    #1차원 배열을 2차원으로 변경
 
 
 # One-Hot encoding
-
-
-
-
 #더미변수
 
 col_cols = df.select_dtypes('object').columns.values
