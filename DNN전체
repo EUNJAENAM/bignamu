@@ -1,3 +1,9 @@
+import pandas as pd
+pd.set_option('display.max_rows', None)
+import numpy  as np
+from tensorflow import keras
+import matplotlib.pyplot as plt
+
 # 데이터수의 불균형 
 from imblearn.over_sampling import SMOTE
 X_resampled, y_resampled = SMOTE().fit_resample(X, y)
@@ -36,7 +42,7 @@ initial_weights = model.get_weights()
 model.summary()
 keras.utils.plot_model(model, show_shapes=True)
 
-#최적화
+#
 learning_rate = 0.001
 
 model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate), 
