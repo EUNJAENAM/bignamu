@@ -673,3 +673,14 @@ y = train['TARGET']
 ---------------------------------------------------
 y.value_counts().to_frame().T
 # y.value_counts()
+
+------------------------------------------------------
+df[['Destination', 'Transported']].groupby(['Destination'], as_index=False).mean().sort_values(by='Transported')
+
+arrived = df[df['Transported'] == 1]['Destination']. value_counts()
+not_arrived = df[df['Transported'] == 0]['Destination']. value_counts()
+df = pd. DataFrame([arrived, not_arrived])
+df. index = ['arrived','not_arrived']
+df. plot(kind= 'bar',stacked= False , figsize= (8,4))
+plt.title('Destination')
+plt. show()
