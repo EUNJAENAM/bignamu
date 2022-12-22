@@ -61,6 +61,15 @@ logs = pd.DataFrame(history.history)
 
 plt.figure(figsize=(14, 4))
 plt.subplot(1, 2, 1)
+
+# 딥러닝 모델 성능평가 - loss그래프 그리기
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
+plt.legend(['acc', 'val_acc'])
+plt.show()
 plt.plot(logs.loc[5:,"loss"], lw=2, label='training loss')
 plt.plot(logs.loc[5:,"val_loss"], lw=2, label='validation loss')
 plt.xlabel("Epoch")
