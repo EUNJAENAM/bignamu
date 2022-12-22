@@ -46,28 +46,23 @@ plt.show()
 import seaborn as sns
 sns.countplot(data=df_total, x=’aaa’)
 
-![image](https://user-images.githubusercontent.com/91514129/209146251-139ce0d2-d8c9-49e8-aaa1-ea081cbe363c.png)
-
 ```
 
 ### distplot
 ```python
 sns.distplot(df_total['ET'])
-![image](https://user-images.githubusercontent.com/91514129/209146416-d9aad2c4-d4a9-4aea-83db-44a21accd41d.png)
 
 ```
 
 ### boxplot
 ```python
 sns.boxplot(x=df_total['level1_pnu'], y=df_total['ET'])
-![image](https://user-images.githubusercontent.com/91514129/209146440-697a4812-f358-4d48-9c08-6c5c3a871259.png)
 
 ```
 
 ### pairplot
 ```python
 sns.pairplot(df_total)
-![image](https://user-images.githubusercontent.com/91514129/209146458-51c7bf14-b2d8-40d6-b7da-ec872d8a8d42.png)
 
 ```
 
@@ -76,7 +71,5 @@ sns.pairplot(df_total)
 import matplotlib.pyplot as plt
 sns.heatmap(df_total.corr(), annot = True)
 plt.show()
-
-![image](https://user-images.githubusercontent.com/91514129/209146479-c6c2208d-e528-4b90-836b-5b8cf96e27fc.png)
 
 ```
