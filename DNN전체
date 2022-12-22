@@ -4,7 +4,7 @@ import numpy  as np
 from tensorflow import keras
 import matplotlib.pyplot as plt
 
-# 데이터수의 불균형 
+## 데이터수의 불균형 
 from imblearn.over_sampling import SMOTE
 X_resampled, y_resampled = SMOTE().fit_resample(X, y)
 
