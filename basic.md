@@ -15,6 +15,8 @@ df["2014년"][2:5]     #2014년 컬럼중 2행~5행까지 정보
 
 df.loc[2:7,['2012년','2014년']]        #부분 불러오기
 df.iloc[2:7,3:5]                      #iloc 는 숫자로만
+
+df_any = df1.loc[2035,['행정구역','2019년_총인구수','2020년_총인구수','2021년_총인구수']]
 ```
 
 ### SPLIT/REPLACE/SORT_VALUE
@@ -47,6 +49,15 @@ df.drop(labels=[1,2,3], axis=0)
 df.dropna(subset = [‘열이름’])
 #모든 값이 전부 NaN 인 행만 제거
 df.dropna(how=’all’)
+```
+### 조건값으로 정보찾기
+```python
+df[df['상태'] != '사업개시']    #사업개시란 발전소가 가동중이라는 의미
+df[(df['상태'] == '공사진행') & (df['사업개시일'] != 'NaN')]  
+
+df['상호'] =='태양' and df['상호'] =='솔라' and  df['상호'] =='햇빛'
+df = df[df['상호'].str.contains('풍력')]
+df = df[(df['상호'].str.contains('태양')) | (df['상호'].str.contains('솔라'))].index
 ```
 
 ### COLUMNS NAME
@@ -87,3 +98,12 @@ data_result = pd.merge(CCTV_Seoul, pop_Seoul, on='구별')      # 데이터 합�
 ```python
 np.corrcoef(data_result['고령자비율'],data_result['총계'])     #상관관계 분석
 ```
+
+### 더미변수
+```python
+col_cols = df.select_dtypes('object').columns.values
+df1 = pd.get_dummies(data=df, columns=col_cols)
+```
+
+
+
