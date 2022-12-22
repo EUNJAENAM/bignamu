@@ -160,7 +160,7 @@ sns.pairplot(df_total)
 
 # heatmap
 import matplotlib.pyplot as plt
-sns.heatmap(df_total.corr(), annot = True)
+sns.heatmap(df_total.corr(), cmap='Blues', linewidths='0.1', annot = True)
 plt.show()
 
 #날자 데이터/#현재시간 읽어오기
@@ -234,11 +234,6 @@ df.to_numpy()
 df.transpose()   혹은 df.T
 
 bmi = X[:,np.newaxis, 2]    #1차원 배열을 2차원으로 변경
-
-
-
-
-
 
 # One-Hot encoding
 #더미변수
