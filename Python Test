@@ -818,3 +818,18 @@ plt.show()
 # 아래에 실습코드를 작성하세요.
 model.load_weights(checkpoint_path)
 model.save("model/DeeplearningModel.h5")
+
+---------------------------------------------------
+train.dtypes.value_counts()
+train.select_dtypes(include=['float64']).nunique()
+train['saldo_var1'].unique()
+
+---------------------------------------------------
+X = train.iloc[:,:-1]
+y = train['TARGET']
+
+# X = train.drop(labels='TARGET', axis=1)
+# y = train['TARGET']
+---------------------------------------------------
+y.value_counts().to_frame().T
+# y.value_counts()
