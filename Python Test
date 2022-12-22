@@ -1,11 +1,8 @@
-# 조건처리
-
 if condition:
     print("change>3000")
 else:
     print("change<=3000")
-
-------------------------------------------------------------------------------------------   
+----------------------------------------------------------------------------------------
 DEBUG = False
 
 a=10
@@ -13,7 +10,12 @@ b=15
 
 if DEBUG:
     print("a={}, b={}".format(a,b))
-------------------------------------------------------------------------------------------    
+------------------------------------------------------------------------------------------
+# 리스트와 리스트 더하기
+myList1 = [1,2,3]
+myList2 = [4,5,6]
+myList1.extend(myList2)
+------------------------------------------------------------------------------------------
 #엑셀파일 로드 Version Up
 !pip install xlrd==1.2.0
 
@@ -63,7 +65,11 @@ def calc(a, b, c):
 #lambda
 add = lambda a, b: a+b
 
-----------------------------------------------------------------------------------------
+
+
+분기, 프로그램 성능 저하
+바로 실행, 분기없음, 성능저하 양호
+코드양이 적을 때 활용
 
 #조건
 # 아래에 실습코드를 작성하고 결과를 확인합니다.
@@ -106,7 +112,6 @@ print(mylist)
 for i in mylist:                     # 짝수이면 if는 참이다.
     if i % 2 == 0:
         print(i)
-
 ------------------------------------------------------------------------
 mylist = [i for i in range(1,11) if i%2==0]      #1~10사이의 숫자중 짝수만
 mylist
@@ -126,3 +131,690 @@ a = '01-sample.png’
 a.replace(‘.png’,‘.jpg’)
 
 a.strip()     #공백제거
+!pip install xlrd==1.2.0              #엑셀 버전업
+# 코랩에서 한글 사용시
+!sudo apt-get install -y fonts-nanum
+!sudo fc-cache -fv
+!rm ~/.cache/matplotlib –rf
+
+# 경로 확인
+%cd {basePath}
+!pwd
+
+#구글드라이브 마운틴
+from google.colab import drive
+drive.mount('/content/drive')
+mydict['apple'] = 'byebye'     #값 바꾸기
+------------------------------------------------------------------------------------
+#시험중 작업중인 디렉토리 파일 확인
+import os
+os.listdir('.')
+
+#csv load
+import pandas as pd
+
+csvPath = '/content/drive/MyDrive/Colab Notebooks/자격증/서울시CCTV구별_211231기준.csv'
+xlsPath = '/content/drive/MyDrive/Colab Notebooks/자격증/주민등록인구_2021.xls’
+
+df = pd.read_csv(csvPath, header=1, encoding='CP949')        #encoding=’‘utf-8’
+#‘UTF-8’로 해서 표현 안되면 ‘CP949’로 설정
+df = pd.read_csv(csvPath, header=1, encoding='CP949', thousands=',')    # 콤마제거 후 로드
+
+df.columns                         #컬럼명 확인
+df.columns = ['구별', '총계']         #컬럼명 새로 지정(변경)
+df.rename(columns = {'총계':'소계'},inplace=True)     #rename 사용시
+
+df.drop([0,1], inplace=True)     #불필요 column 삭제 index번호임 (0부터 시작)
+--------------------------------------------------------------------------------
+#필터링해서 내용 삭제
+a = df[df['구별']=='용산구'].index
+df.drop(a, axis='index')
+
+df.drop(index=0)   # 0번 인덱스 삭제
+df.drop(index=0, columns='2016년', axis=1)    #0번 인덱스 2016년 컬럼삭제
+df.drop(labels=['2012년 이전','2014년','2015년','2016년'], axis=1)
+df.drop(labels=[1,2,3], axis=0)
+#NaN 제거
+df.dropna(subset = [‘열이름’])
+#모든 값이 전부 NaN 인 행만 제거
+df.dropna(how=’all’)
+--------------------------------------------------------------------------------
+df.reset_index(drop=True, inplace=True)     #index reset
+df.isnull().sum()    #결측치 개수 확인
+df.fillna(0,inplace=True)     #결측치 값 특정값으로 채우기
+df.fillna(method=’ffill’)      #‘backfill’, ‘bfill’, ‘pad’, ‘ffill’, None
+df.info()    #정보보기
+#컬럼 형변환 (2번 컬럼부터( 0부터 시작))
+for i in df.columns[2:]:
+  df[i] = df[i].astype(int)
+
+df['총계'] = df['총계'].str.replace(',','').astype(int)      #콤마 들어간 숫자 변환
+
+df.sort_values(by='소계', ascending=True, inplace=True)        #소계별로 정렬
+
+df['최근증가율'] = (df['2016년'] + df['2015년'] + df['2014년']) / \
+              df['2013년도 이전'] *100
+
+df
+DataFrame에서 부분정보 가져올때는 [열][행]
+loc 는 [행,열]
+iloc 는 [행,열] 인데 숫자로만
+
+df["2014년"][2:5]     #2014년 컬럼중 2행~5행까지 정보
+df.loc[2:7,['2012년','2014년']]        #부분 불러오기
+df.iloc[2:7,3:5]                      #iloc 는 숫자로만
+
+id(CCTV_Seoul)     #메모리 번지 참조
+# '구별'컬럼에 '중랑구'나 '종로구'가 있는지 -> True, False로 응답
+CCTV_Seoul['구별'].isin(['중랑구','종로구'])
+CCTV_Seoul['구별'].unique()     #유니크
+
+result = pd.concat([df1, df2, df3])     #데이터 연결 (레코드수 증가)
+result = pd.concat([df1, df2, df3], keys=['x', 'y', 'z'])   #index 추가
+result = pd.concat([df1, df4], axis=1)     #join=outter (기본값), 합집합
+result = pd.concat([df1, df4], axis=1, join='inner')    #join=inner, 데이터가 모두 있는 경우
+
+CCTV_Seoul.set_index('구별', inplace=True)    #인덱시 변경
+data_result = pd.merge(CCTV_Seoul, pop_Seoul, on='구별')      # 데이터 합치기(Merge)
+np.corrcoef(data_result['고령자비율'],data_result['총계'])     #상관관계 분석
+
+#chart
+# plot
+import matplotlib.pyplot as plt
+plt.rc('font',family='NanumBarunGothic')    #한글폰트 설정
+plt.figure()
+data_result['총계'].sort_values().plot(kind='barh', grid=True, figsize=(8,8))
+plt.show()
+----------------------------------------------------------------
+df[‘aa’].value_counts().plot(kind=“bar”)
+----------------------------------------------------------------
+# scatter
+plt.scatter(data_result['인구수'], data_result['총계'], s=50)
+plt.xlabel('인구수')
+plt.ylabel('CCTV')
+plt.grid()
+plt.show()
+-다른예시------------------------------------------------------------
+import matplotlib.pyplot as plt
+df_total.plot.scatter(x='A_DISTANCE', y='ET', c='DarkBlue')
+#--------------------------------------------------------------------------------------------
+# numpy에서 선형회귀를 구할수 있는 함수, 기울기와 절편 y=wx+b
+fp1 = np.polyfit(data_result['인구수'], data_result['소계'], 1)
+
+f1 = np.poly1d(fp1)
+fx = np.linspace(100000, 700000, 100)
+plt.figure(figsize=(10,10))
+plt.scatter(data_result['인구수'], data_result['소계'], s=50)
+plt.plot(fx, f1(fx), ls='dashed', lw=3, color='g')
+plt.xlabel('인구수')
+plt.ylabel('CCTV')
+plt.grid()
+plt.show()
+# DNN 진행후 loss율
+import numpy as np
+
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["loss"], label="train_loss")
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["val_loss"], label="val_loss")
+plt.title("Training Loss")
+plt.xlabel("Epoch #")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+
+-------------------
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["mae"], label="train_mae")
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["val_mae"], label="val_mae")
+plt.title("Training mae")
+plt.xlabel("Epoch #")
+plt.ylabel("mae")
+plt.legend()
+plt.show()
+-----------------------
+# 아래에 실습코드를 작성하세요.
+model.load_weights(checkpoint_path)
+model.save("model/DeeplearningModel.h5")
+#-------------------------------------------------------------------------------------------
+fp1 = np.polyfit(data_result['인구수'], data_result['소계'], 1)
+
+f1 = np.poly1d(fp1)
+fx = np.linspace(100000, 700000, 100)
+
+data_result['오차'] = np.abs(data_result['소계'] - f1(data_result['인구수']))
+
+df_sort = data_result.sort_values(by='오차', ascending=False)
+df_sort.head()
+
+plt.figure(figsize=(14,10))
+plt.scatter(data_result['인구수'], data_result['소계'], 
+            c=data_result['오차'], s=50)
+plt.plot(fx, f1(fx), ls='dashed', lw=3, color='g')
+
+for n in range(10):
+    plt.text(df_sort['인구수'][n]*1.02, df_sort['소계'][n]*0.98, 
+             df_sort.index[n], fontsize=15)
+    
+plt.xlabel('인구수')
+plt.ylabel('인구당비율')
+plt.colorbar()
+plt.grid()
+plt.show()
+# seaborn 
+# countplot
+import seaborn as sns
+sns.countplot(data=df_total, x=’aaa’)
+
+
+# distplot
+sns.distplot(df_total['ET'])
+
+
+# boxplot
+sns.boxplot(x=df_total['level1_pnu'], y=df_total['ET'])
+
+
+# pairplot
+sns.pairplot(df_total)
+
+
+# heatmap
+import matplotlib.pyplot as plt
+sns.heatmap(df_total.corr(), annot = True)
+plt.show()
+
+#날자 데이터/#현재시간 읽어오기
+from datetime import date, datetime
+
+nowTime = date.today()
+print(nowTime)
+
+weekDay = nowTime.weekday()
+print(weekDay)
+------------------------------------------------------------------------------
+df['날짜'] = pd.to_datetime(df['날짜'])
+df.info()
+
+Min_date = df[(df['날짜'] > "1907-10-02") & (df['날짜'] < "1907-10-05")].copy()       # 1번
+Min_date = df[(df['날짜'] > "1907-10-02") & (df['날짜'] < "1907-10-05")]              # 2번
+Min_date = df[(df['날짜'] == "1907-10-02") | (df['날짜'] == "1907-10-05")].copy()      # or
+
+------------------------------------------------------------------------------
+#enumerate
+maxTemp = df['최고기온(℃)'].max()
+print(maxTemp)
+
+for i, temp in enumerate(df['최고기온(℃)']):
+  if temp==maxTemp:
+    print(df.iloc[i,0])
+    print(df.loc[i,'날짜'])
+
+------------------------------------------------------------------
+https://www.data.go.kr/data/3082724/fileData.do
+--특정컬럼 가져오기----------------------------------------------------------------------
+df_test = df[['2019년_총인구수','2020년_총인구수','2021년_총인구수']]
+print(type(df_test))
+df_any = df1.loc[2035,['행정구역','2019년_총인구수','2020년_총인구수','2021년_총인구수']]
+print(type(df_any))
+
+--내가 찾고자 하는 키워드로 행 데이터 찾기--------------------------------------------------
+df[df['상태'] != '사업개시']    #사업개시란 발전소가 가동중이라는 의미
+df[(df['상태'] == '공사진행') & (df['사업개시일'] != 'NaN')]  
+
+# df['상호'] =='태양' and df['상호'] =='솔라' and  df['상호'] =='햇빛'
+# df = df[df['상호'].str.contains('풍력')]
+df = df[(df['상호'].str.contains('태양')) | (df['상호'].str.contains('솔라'))].index
+
+--------------------------------------------------------------------------------------
+#Reshape을 통한 배열 변환 (reshape를 쓰려면 Numpy배열로 변환해야 함)
+df_any.astype(int)
+df_any = df_any.to_numpy()
+df_any.reshape(-1,1)
+
+#For 문을 통한 리스트 추가
+pop_List = []
+for i in df_any:
+  pop_List.append(i)
+
+#시리즈(Series)를 DataFrame로 변환
+df.to_frame()
+df.columns=[‘컬럼명’]
+
+#리스트(list)를 DataFrame로 변환
+pd.DataFrame(df)
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+
+#DataFrame 행렬 바꾸기
+df.transpose()   혹은 df.T
+
+bmi = X[:,np.newaxis, 2]    #1차원 배열을 2차원으로 변경
+
+
+
+
+
+
+# One-Hot encoding
+
+
+
+
+#더미변수
+
+col_cols = df.select_dtypes('object').columns.values
+df1 = pd.get_dummies(data=df, columns=col_cols)
+X = df1.drop(['Churn'], axis=1)      #df1에서 ‘Churn’컬럼만 제외하고 X에 저장
+
+#타입 변경
+y = df['Churn']
+y = y.to_numpy(dtype='int32')
+print(type(y))
+
+# 훈련데이터 나누기
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+
+# LinearRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+model = LinearRegression()
+
+reg = model.fit(train_x, train_y)
+pred_y = model.predict(test_x)
+RMSE = mean_squared_error(test_y, pred_y)**0.5
+R2SCORE = r2_score(test_y, pred_y)
+
+print(round(RMSE,5))
+print(round(R2SCORE,5))
+
+df1.score(train_x, train_y)
+print(df1.coef_)
+print(df1.intercept_)
+
+
+# 통계기법에서 OLS
+import statsmodels.api as sm
+
+results = sm.OLS(train_y, train_x).fit()
+results.summary()
+# RandomForestRegressor
+import numpy as np
+from sklearn.ensemble import RandomForestRegressor as rfr
+from sklearn.metrics import roc_auc_score, accuracy_score, mean_squared_error, r2_score
+
+# # 다차원 배열을 1차원으로 평평하게 만들어주기!
+#train_y = np.ravel(train_y, order='C')
+#train_y = train_y.to_numpy().reshape(-1,)
+#train_y = train_y.to_numpy().flatten()
+
+model=rfr(n_estimators=100,max_depth=5,min_samples_split=30,min_samples_leaf=15,random_state=42)
+model.fit(train_x, train_y)
+
+pred_y = model.predict(test_x)
+print("RMSE on Test set : {0:.5f}".format(mean_squared_error(test_y,pred_y)**0.5))
+print("R-squared Score on Test set : {0:.5f}".format(r2_score(test_y,pred_y)))
+----------------- 중요도------------------------------------------------------------------------
+# Feature의 중요도 확인
+import matplotlib.pyplot as plt
+import seaborn as sns
+rf_importances_values = model.feature_importances_
+rf_importances = pd.Series(rf_importances_values, index = train_x.columns)
+rf_top10 = rf_importances.sort_values(ascending=False)[:10]
+
+plt.rcParams["font.family"] = 'NanumGothicCoding'
+plt.figure(figsize=(8,6))
+plt.title('Top 10 Feature Importances')
+sns.barplot(x=rf_top10, y=rf_top10.index,palette = "RdBu")
+plt.show()
+# GradientBoostingRegressor
+import numpy as np
+from sklearn.ensemble import GradientBoostingRegressor as grb
+from sklearn.metrics import roc_auc_score, accuracy_score, mean_squared_error, r2_score
+
+# 다차원 배열을 1차원으로 평평하게 만들어주기!
+train_y = np.ravel(train_y, order='C')
+
+model=grb(n_estimators=100,learning_rate=0.1,max_depth=5,min_samples_split=30,min_samples_leaf=15,random_state=42)
+model.fit(train_x, train_y)
+
+pred_y = model.predict(test_x)
+print("RMSE on Test set : {0:.5f}".format(mean_squared_error(test_y,pred_y)**0.5))
+print("R-squared Score on Test set : {0:.5f}".format(r2_score(test_y,pred_y)))
+-------------중요도 확인-----------------------------------------------------------------------
+# Feature의 중요도 확인
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+grb_importances_values = model.feature_importances_
+grb_importances = pd.Series(grb_importances_values, index = train_x.columns)
+grb_top10 = grb_importances.sort_values(ascending=False)[:10]
+
+plt.rcParams["font.family"] = 'NanumGothicCoding'
+plt.figure(figsize=(8,6))
+plt.title('Top 10 Feature Importances')
+sns.barplot(x=grb_top10, y=grb_top10.index,palette = "RdBu")
+plt.show()
+# XGBRegressor
+import numpy as np
+from xgboost import XGBRegressor as xgb
+from sklearn.metrics import roc_auc_score, accuracy_score, mean_squared_error, r2_score
+
+# 다차원 배열을 1차원으로 평평하게 만들어주기!
+train_y = np.ravel(train_y, order='C')
+
+model=xgb(n_estimators=100,gamma=1,eta=0.1,max_depth=5,reg_lambda=5,reg_alpha=5,random_state=42)
+model.fit(train_x, train_y)
+
+pred_y = model.predict(test_x)
+print("RMSE on Test set : {0:.5f}".format(mean_squared_error(test_y,pred_y)**0.5))
+print("R-squared Score on Test set : {0:.5f}".format(r2_score(test_y,pred_y)))
+
+---------------------------------------------------------------------------------------------
+# Feature의 중요도 확인
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+xgb_importances_values = model.feature_importances_
+xgb_importances = pd.Series(xgb_importances_values, index = train_x.columns)
+xgb_top10 = xgb_importances.sort_values(ascending=False)[:10]
+
+plt.rcParams["font.family"] = 'NanumGothicCoding'
+plt.figure(figsize=(8,6))
+plt.title('Top 10 Feature Importances')
+sns.barplot(x=xgb_top10, y=xgb_top10.index,palette = "RdBu")
+plt.show()
+# LogisticRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix 
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report
+
+lg = LogisticRegression()
+lg.fit(X_train, y_train)
+lg.score(X_test, y_test)
+lg_pred = lg.predict(X_test)
+-------------------------------------------------------------------
+# 가로 세로 축에 대한 이해도를 명확하게 하려면 
+# ConfusionMatrixDisplay함수로 출력해주면 된다.
+from sklearn.metrics import ConfusionMatrixDisplay
+
+# 오차행렬
+# FN  FP
+# TN  TP
+
+cm = confusion_matrix(y_test, lg_pred) 
+disp = ConfusionMatrixDisplay(confusion_matrix=cm,
+                               display_labels=lg.classes_)
+disp.plot()
+-----------------------------------------------------------------
+# 정확도
+accuracy_score(y_test, lg_pred)  
+# 정밀도
+precision_score(y_test, lg_pred) 
+# 재현율 : 낮다. 
+recall_score(y_test, lg_pred)  
+# F1 score => 정밀도와 재현율의 조화평균
+f1_score(y_test, lg_pred) 
+
+print(classification_report(y_test, lg_pred))    #종합적으로
+recall_eval('LogisticRegression', lg_pred, y_test)    #차트로
+
+
+# KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+knn_pred = knn.predict(X_test)
+recall_eval('K-Nearest Neighbor', knn_pred, y_test)
+
+
+# DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier(max_depth=15, random_state=42)
+dt.fit(X_train, y_train)
+dt_pred = dt.predict(X_test)
+recall_eval('DecisionTree', dt_pred, y_test)
+
+# RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
+rfc = RandomForestClassifier(n_estimators=3, random_state=42)
+rfc.fit(X_train, y_train)
+rfc_pred = rfc.predict(X_test)
+recall_eval('RandomForest Ensemble', rfc_pred, y_test)
+
+# XGBClassifier
+from xgboost import XGBClassifier
+xgb = XGBClassifier(n_estimators=3, random_state=42)  
+xgb.fit(X_train, y_train)
+xgb_pred = xgb.predict(X_test)
+recall_eval('XGBoost', xgb_pred, y_test)
+
+# LGBMClassifier
+from lightgbm import LGBMClassifier
+lgbm = LGBMClassifier(n_estimators=3, random_state=42)  
+lgbm.fit(X_train, y_train)
+lgbm_pred = lgbm.predict(X_test)
+recall_eval('LGBM', lgbm_pred, y_test)
+
+lgbm.score(X_test, y_test)
+----------------------------------------------------------------------------------------
+# 전처리
+df['Churn'].value_counts().plot(kind='bar')                # 파일 불균형 바차트
+pd.get_dummies(data=df, columns=['MultipleLines'])      #더미함수
+
+cal_cols = df.select_dtypes('object').columns.values     #컬럼명 수집
+cal_cols
+df1 = pd.get_dummies(data=df, columns=cal_cols)      #여러개의 컬럼 더미함수 적용
+
+# DataFrame 'Churn' 컬럼 사용
+# DataFrame에서 values만 y에 저장
+y = df1['Churn']
+y = y.to_numpy(dtype='int32')
+print(type(y))
+
+#DNN
+# 딥러닝 데이터 불러오기
+from sklearn.model_selection import train_test_split
+
+# train_test_split
+train_x, test_x, train_y, test_y = train_test_split(df_feature, df_target, test_size=0.20, random_state=42)
+
+# 정규화/표준화
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+pd.DataFrame(result, columns=df_feature.columns)
+-(1)----------------------------------------------------------------------
+from sklearn.preprocessing import StandardScaler
+sclaer = StandardScale()
+result = scaler.fit_transform(df_feature)
+print(type(result))
+df_frature_std = pd.DataFrame(result, columns=df_feature.columns)
+df_frature_std.describe()
+-(2)----------------------------------------------------------------------
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+x_train = pd.DataFrame(scaler.fit_transform(train_x), columns=x_train.columns)
+x_test = pd.DataFrame(scaler.transform(test_x), columns=x_test.columns)
+print(x_train.head())
+print(x_test.head())
+
+type(x_train)
+# 딥러닝 모델-심층신경망(회귀모델)
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.random import set_seed
+
+set_seed(100)
+
+col_num = train_x.shape[1]
+
+model = Sequential()
+model.add(Dense(64, activation='relu', input_shape=(col_num,)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(1))
+
+model.compile(loss='mse',
+              optimizer='adam',
+              metrics=['mae'])      
+model.summary()
+
+# 딥러닝 모델-심층신경만(이진 분류 모델)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.random import set_seed
+
+set_seed(100)
+
+col_num = train_x.shape[1]
+
+model = Sequential()
+model.add(Dense(64, activation='relu', input_shape=(col_num,)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])      
+model.summary()
+# 딥러닝 모델-심층신경망(다중 분류 모델)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.random import set_seed
+
+set_seed(100)
+class_num = 2
+
+# 회귀 모델의 경우
+col_num = train_x.shape[1]
+
+model = Sequential()
+model.add(Dense(64, activation='relu', input_shape=(col_num,)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(class_num, activation='softmax'))
+
+model.compile(loss='sparse_categorical_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])      
+model.summary() 
+# 모델개발  -선형회귀
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+
+tf.random.set_seed(100)
+batch_size = 16
+epochs = 20
+
+---예시1----------------------------------------------------------------
+model = Sequential()
+model.add(Dense(4, activation='relu', input_shape=(39,)))
+model.add(Dense(3, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.summary()
+
+---예시2----------------------------------------------------------------
+model = Sequential()
+model.add(Dense(4, activation='relu', input_shape=(39,)))
+# 신경망에서 연결은 다 하지만, 학습할때 가중치에 대한 업데이트를 30%만 적용
+# 학습시에 가중치 업데이트를 30%로 누락 시킨다.
+model.add(Dropout(0.3))
+model.add(Dense(3, activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(1, activation='sigmoid'))
+
+# 모델 컴파일------------------------------------------
+model.compile(optimizer='adam', 
+              loss='binary_crossentropy', 
+              metrics=['accuracy']) 
+
+# 모델 훈련---------------------------------------------------------
+history = model.fit(X_train, y_train, epochs=10, batch_size=10, validation_data=(X_test, y_test))
+-----------성능 시각화-----------------------------
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
+plt.legend(['acc', 'val_acc'])
+plt.show()
+
+-----성능평가---------------------------------------
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report
+
+pred = model.predict(X_test)
+y_pred = np.argmax(pred, axis=1)
+accuracy_score(y_test, y_pred)    #정확도
+recall_score(y_test, y_pred)       #재현율
+
+----한꺼번에 보기------
+print(classification_report(y_test, y_pred))
+------ 모델 함수에 넣기--------------------------------------------
+def build_model():
+    model = Sequential()
+    model.add(Dense(5, activation='relu', input_shape=(39,)))
+    model.add(Dropout(0.3))
+    model.add(Dense(4, activation='relu'))
+    model.add(Dropout(0.3))
+    model.add(Dense(2, activation='softmax'))
+
+    model.compile(optimizer='adam', 
+              loss='sparse_categorical_crossentropy', 
+              metrics=['accuracy']) 
+
+    return model
+
+build_model()
+
+-------모델학습-------------------------------------------------
+history = model.fit(X_train, y_train, 
+          validation_data=(X_test, y_test),
+          epochs=20, 
+          batch_size=16)
+
+--------조기종료  callback -----------------------------------------
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+early_stop = EarlyStopping(monitor='val_loss', mode='min', patience=5)
+check_point = ModelCheckpoint('best_model.h5', monitor='val_loss', mode='min', save_best_only=True)
+callbacks = [early_stop, check_point]
+model = build_model() 
+----- 모델학습(callbacks)---------------------------------------------------
+history = model.fit(x=X_train, y=y_train, 
+          epochs=50 , batch_size=20,
+          validation_data=(X_test, y_test), verbose=1,
+          callbacks=callbacks)
+# DNN 진행후 loss율
+import numpy as np
+
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["loss"], label="train_loss")
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["val_loss"], label="val_loss")
+plt.title("Training Loss")
+plt.xlabel("Epoch #")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+
+-------------------
+plt.style.use("ggplot")
+plt.figure()
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["mae"], label="train_mae")
+plt.plot(np.arange(0, len(history.history["loss"])), history.history["val_mae"], label="val_mae")
+plt.title("Training mae")
+plt.xlabel("Epoch #")
+plt.ylabel("mae")
+plt.legend()
+plt.show()
+-----------------------
+# 아래에 실습코드를 작성하세요.
+model.load_weights(checkpoint_path)
+model.save("model/DeeplearningModel.h5")
