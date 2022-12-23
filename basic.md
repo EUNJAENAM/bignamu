@@ -30,6 +30,13 @@ a.replace(‘.png’,‘.jpg’)
 df['총계'] = df['총계'].str.replace(',','').astype(int)      #콤마 들어간 숫자 변환
 df.sort_values(by='소계', ascending=True, inplace=True)        #소계별로 정렬
 a.strip()     #공백제거
+
+cab = df['Cabin'].apply(lambda x: x.split('/’))
+df['Cabin_1'] = cab.apply(lambda x:x[0])
+df['Cabin_2'] = cab.apply(lambda x:int(x[1]))
+df['Cabin_3'] = cab.apply(lambda x:x[2])
+![image](https://user-images.githubusercontent.com/91514129/209264273-a9d6b674-9ab2-4c39-ba95-3384e7798053.png)
+
 ```
 ### 조건값으로 DROP 하기
 ```python
@@ -73,6 +80,13 @@ df.drop([0,1], inplace=True)         #불필요 column 삭제 index번호임 (0�
 df.isnull().sum()    #결측치 개수 확인
 df.fillna(0,inplace=True)     #결측치 값 특정값으로 채우기
 df.fillna(method=’ffill’)      #‘backfill’, ‘bfill’, ‘pad’, ‘ffill’, None
+
+# 최빈값으로 채운다. 
+df['VIP'] = df['VIP'].fillna(0)
+df['Cabin'] = df['Cabin'].fillna(df['Cabin'].mode()[0])
+# 중앙값으로 채운다.
+df['Age'] = df['Age'].fillna(df['Age'].median())
+
 ```
 
 ### RESET INDEX
@@ -136,4 +150,33 @@ df. index = ['Arrived','Not_Arrived']
 df. plot(kind= 'bar',stacked= False , figsize= (6,4)). legend(loc = 'lower center')
 plt.title('Age')
 plt. show()
+```
+
+
+### 인쇄물
+```python
+df['Churn'].value_counts().plot(kind='bar')
+
+pd.get_dummies(data=df, columns=['MultipleLines'])
+
+df.select_dtypes('object').head(3)
+
+
+#시리즈(Series)를 DataFrame로 변환
+df.to_frame()
+df.columns=[‘컬럼명’]
+
+#리스트를 np.array로 변환    
+np.array(리스트명)
+
+#리스트(list)를 DataFrame로 변환
+pd.DataFrame(df)
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+
+#DataFrame를 numpy배열로 변환
+df.to_numpy()
+
+#DataFrame 행렬 바꾸기
+df.transpose()   혹은 df.T
+
 ```
