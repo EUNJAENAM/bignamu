@@ -35,7 +35,6 @@ cab = df['Cabin'].apply(lambda x: x.split('/’))
 df['Cabin_1'] = cab.apply(lambda x:x[0])
 df['Cabin_2'] = cab.apply(lambda x:int(x[1]))
 df['Cabin_3'] = cab.apply(lambda x:x[2])
-![image](https://user-images.githubusercontent.com/91514129/209264273-a9d6b674-9ab2-4c39-ba95-3384e7798053.png)
 
 ```
 ### 조건값으로 DROP 하기
