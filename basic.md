@@ -117,6 +117,3 @@ df. plot(kind= 'bar',stacked= False , figsize= (8,4))
 plt.title('Destination')
 plt. show()
 ```
-
-
-
