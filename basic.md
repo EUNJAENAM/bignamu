@@ -117,3 +117,23 @@ df. plot(kind= 'bar',stacked= False , figsize= (8,4))
 plt.title('Destination')
 plt. show()
 ```
+
+### 범주화/시각화
+```python
+train_data.loc[(train_data['Age'] >= 0) & (train_data['Age'] < 10), 'Age'] = 0
+train_data.loc[(train_data['Age'] >= 10) & (train_data['Age'] < 20), 'Age'] = 10
+train_data.loc[(train_data['Age'] >= 20) & (train_data['Age'] < 30), 'Age'] = 20
+train_data.loc[(train_data['Age'] >= 30) & (train_data['Age'] < 40), 'Age'] = 30
+train_data.loc[(train_data['Age'] >= 40) & (train_data['Age'] < 50), 'Age'] = 40
+train_data.loc[(train_data['Age'] >= 50) & (train_data['Age'] < 60), 'Age'] = 50
+train_data.loc[(train_data['Age'] >= 60) & (train_data['Age'] < 70), 'Age'] = 60
+train_data.loc[(train_data['Age'] >= 70) & (train_data['Age'] < 80), 'Age'] = 70
+
+Arrived = train_data[train_data['Transported'] == 1]['Age']. value_counts()
+Not_Arrived = train_data[train_data['Transported'] == 0]['Age']. value_counts()
+df = pd. DataFrame([Arrived, Not_Arrived])
+df. index = ['Arrived','Not_Arrived']
+df. plot(kind= 'bar',stacked= False , figsize= (6,4)). legend(loc = 'lower center')
+plt.title('Age')
+plt. show()
+```
