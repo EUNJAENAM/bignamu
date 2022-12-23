@@ -105,5 +105,18 @@ col_cols = df.select_dtypes('object').columns.values
 df1 = pd.get_dummies(data=df, columns=col_cols)
 ```
 
+### groupby/sort
+```python
+train_data[['Destination', 'Transported']].groupby(['Destination'], as_index=False).mean().sort_values(by='Transported')
+
+arrived = train_data[train_data['Transported'] == 1]['Destination']. value_counts()
+not_arrived = train_data[train_data['Transported'] == 0]['Destination']. value_counts()
+df = pd. DataFrame([arrived, not_arrived])
+df. index = ['arrived','not_arrived']
+df. plot(kind= 'bar',stacked= False , figsize= (8,4))
+plt.title('Destination')
+plt. show()
+```
+
 
 
